@@ -33,7 +33,7 @@ const Home = () => {
                 <div key={item.id} className="incident-card">
                     <div>
                         <div style={{ fontSize: '18px', fontWeight: '600' }}>{item.title}</div>
-                        <div style={{ color: '#6c757d', marginTop: '5px' }}>📍 {item.station}</div>
+                        <div style={{ color: '#6c757d', marginTop: '5px' }}> {item.station}</div>
                     </div>
                     
                     <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
