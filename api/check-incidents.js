@@ -66,11 +66,24 @@ function createTransporter() {
   });
 }
 
+function extractProvidedSecret(req) {
+  const authHeader = (req.headers.authorization || "").trim();
+  const headerToken = (req.headers["x-cron-secret"] || "").trim();
+  const queryToken = (req.query?.secret || "").trim();
+
+  if (authHeader.toLowerCase().startsWith("bearer ")) {
+    return authHeader.slice(7).trim();
+  }
+
+  return headerToken || queryToken || authHeader;
+}
+
 module.exports = async (req, res) => {
   try {
-    if (process.env.CRON_SECRET) {
-      const authHeader = req.headers.authorization || "";
-      if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    const expectedSecret = (process.env.CRON_SECRET || "").trim();
+    if (expectedSecret) {
+      const providedSecret = extractProvidedSecret(req);
+      if (providedSecret !== expectedSecret) {
         return res.status(401).json({ error: "Unauthorized" });
       }
     }
