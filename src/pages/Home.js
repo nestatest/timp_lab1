@@ -2,19 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
+const API_URL = "https://69dfcd3629c070e6597ae821.mockapi.io/incidents";
+
 const Home = () => {
     const [incidents, setIncidents] = useState([]);
 
     // 1. GET-запрос: получаем список с сервера
     useEffect(() => {
-        axios.get("https://69dfcd3629c070e6597ae821.mockapi.io/incidents")
+        axios.get(API_URL)
             .then(response => setIncidents(response.data))
             .catch(err => console.error(err));
     }, []);
 
     // 2. DELETE-запрос: удаление записи
     const handleDelete = (id) => {
-        axios.delete(`https://69dfcd3629c070e6597ae821.mockapi.io/incidents/${id}`)
+        axios.delete(`${API_URL}/${id}`)
             .then(() => {
                 setIncidents(incidents.filter(item => item.id !== id));
             })
@@ -33,7 +35,16 @@ const Home = () => {
                 <div key={item.id} className="incident-card">
                     <div>
                         <div style={{ fontSize: '18px', fontWeight: '600' }}>{item.title}</div>
-                        <div style={{ color: '#6c757d', marginTop: '5px' }}> {item.station}</div>
+                        <div style={{ color: '#6c757d', marginTop: '5px' }}>{item.station}</div>
+                        <div style={{ marginTop: '8px', fontSize: '14px', color: '#495057' }}>
+                            <div><strong>ID:</strong> {item.id}</div>
+                            <div><strong>Категория:</strong> {item.category}</div>
+                            <div><strong>Приоритет:</strong> {item.severity}</div>
+                            <div><strong>Время регистрации:</strong> {item.reportedAt}</div>
+                            <div><strong>Ответственный:</strong> {item.assignedTo}</div>
+                            <div><strong>ETA (мин):</strong> {item.etaMinutes}</div>
+                            <div><strong>Описание:</strong> {item.description}</div>
+                        </div>
                     </div>
                     
                     <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
